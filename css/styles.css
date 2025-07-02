@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-primary {
+    color: theme('colors.primary');
+  }
+  
+  .bg-primary {
+    background-color: theme('colors.primary');
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: theme('colors.primary-dark');
+  }
+  
+  .bg-primary-light {
+    background-color: theme('colors.primary-light');
+  }
+  
+  .focus\:ring-primary:focus {
+    --tw-ring-color: theme('colors.primary');
+  }
+  
+  .focus\:border-primary:focus {
+    border-color: theme('colors.primary');
+  }
+} 

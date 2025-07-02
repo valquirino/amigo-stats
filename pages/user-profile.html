@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Jogadores | Perfil do Usuário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Os scripts e estilos serão carregados pelo webpack -->
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed z-10 inset-y-0 left-0 w-64 bg-white shadow-md md:translate-x-0 -translate-x-full md:block hidden">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-xl font-bold text-primary">
+                    AmigoStats
+                </h1>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="dashboard.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-green-100">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="players.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-green-100">
+                    <i class="fas fa-user-alt mr-3"></i>
+                    Jogadores
+                </a>
+                <a href="clubs.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-green-100">
+                    <i class="fas fa-shield-alt mr-3"></i>
+                    Clubes
+                </a>
+                <a href="register-player.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-green-100">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Registrar Jogador
+                </a>
+                <a href="register-club.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-green-100">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    Registrar Clube
+                </a>
+                <a href="user-profile.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-green-700 hover:bg-green-100">
+                    <i class="fas fa-id-card mr-3"></i>
+                    Meu Perfil
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-0 w-full">
+                <button id="logout-btn" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 md:ml-64">
+            <!-- Navbar -->
+            <header class="bg-white shadow">
+                <div class="flex items-center justify-between px-6 py-3">
+                    <button id="sidebar-toggle" class="md:hidden text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p id="user-name" class="text-sm font-semibold text-gray-800">Arthur</p>
+                                    <p id="user-role" class="text-xs text-gray-500">administrador</p>
+                                </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-800">Meu Perfil</h1>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex items-center mb-6">
+                        <div class="h-20 w-20 rounded-full bg-green-500 flex items-center justify-center text-white text-4xl mr-6">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h2 id="profile-name" class="text-xl font-semibold text-gray-800">Nome do Usuário</h2>
+                            <p id="profile-email" class="text-gray-600">email@exemplo.com</p>
+                            <p id="profile-role" class="text-sm text-gray-500 mt-1">Cargo: Administrador</p>
+                        </div>
+                    </div>
+                    
+                    <div id="update-avatar" class="mb-6">
+                        <button class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="fas fa-camera mr-1"></i> Alterar foto de perfil
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Informações do Usuário -->
+                <div class="bg-white rounded-lg shadow-md mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Informações Pessoais</h3>
+                    </div>
+                    <div class="p-6">
+                        <form id="profile-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+                                    <input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="position" class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
+                                    <input type="text" id="position" name="position" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" disabled>
+                                </div>
+                                
+                                <div>
+                                    <label for="create-login" class="block text-sm font-medium text-gray-700 mb-1">Data Criação</label>
+                                    <input type="text" id="create-login" name="create-login" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 flex justify-end">
+                                <button type="submit" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                                    <i class="fas fa-save mr-2"></i>Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Alterar Senha -->
+                <div class="bg-white rounded-lg shadow-md mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Alterar Senha</h3>
+                    </div>
+                    <div class="p-6">
+                        <form id="password-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="current-password" class="block text-sm font-medium text-gray-700 mb-1">Senha atual</label>
+                                    <input type="password" id="current-password" name="current-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                                </div>
+                                
+                                <div class="md:col-span-2 border-t pt-4 md:border-t-0 md:pt-0">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="new-password" class="block text-sm font-medium text-gray-700 mb-1">Nova senha</label>
+                                            <input type="password" id="new-password" name="new-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirmar nova senha</label>
+                                            <input type="password" id="confirm-password" name="confirm-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 flex justify-end">
+                                <button type="submit" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                                    <i class="fas fa-key mr-2"></i>Alterar Senha
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="../js/user-profile.js"></script>
+</body>
+</html> 

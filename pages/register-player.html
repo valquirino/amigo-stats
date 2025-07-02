@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Jogadores | Registrar Jogador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Os scripts e estilos serão carregados pelo webpack -->
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed z-10 inset-y-0 left-0 w-64 bg-white shadow-md md:translate-x-0 -translate-x-full md:block hidden">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-xl font-bold text-primary">
+                    AmigoStats
+                </h1>
+            </div>
+
+            <nav class="mt-5 px-2">
+                <a href="dashboard.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="players.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-alt mr-3"></i>
+                    Jogadores
+                </a>
+                <a href="clubs.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-shield-alt mr-3"></i>
+                    Clubes
+                </a>
+                <a href="register-player.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-primary hover:bg-primary-dark hover:bg-opacity-20">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Registrar Jogador
+                </a>
+                <a href="register-club.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    Registrar Clube
+                </a>
+                <a href="user-profile.html"
+                    class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-id-card mr-3"></i>
+                    Meu Perfil
+                </a>
+            </nav>
+
+            <div class="absolute bottom-0 w-full">
+                <button id="logout-btn" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 md:ml-64">
+            <!-- Navbar -->
+            <header class="bg-white shadow">
+                <div class="flex items-center justify-between px-6 py-3">
+                    <button id="sidebar-toggle" class="md:hidden text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p id="user-name" class="text-sm font-semibold text-gray-800">Arthur</p>
+                                    <p id="user-role" class="text-xs text-gray-500">administrador</p>
+                                </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-800">Registrar Novo Jogador</h1>
+                    <a href="players.html" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar para Lista
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <form id="player-form" class="space-y-6" enctype="multipart/form-data">
+                        <!-- Informações Pessoais -->
+                        <div class="border-b pb-4">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Informações Pessoais</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome
+                                        Completo*</label>
+                                    <input type="text" id="name" name="name"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                       required >
+                                </div>
+                                <div>
+                                    <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1">CPF*</label>
+                                    <input type="text" id="cpf" name="cpf"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                        maxlength="14" placeholder="000.000.000-00" required>
+                                </div>
+
+                                <div>
+                                    <label for="nickname"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Apelido</label>
+                                    <input type="text" id="nickname" name="nickname"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                </div>
+
+                                <div>
+                                    <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Data de
+                                        Nascimento*</label>
+                                    <input type="date" id="birthdate" name="birthdate"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                        >
+                                </div>
+
+                                <div>
+                                    <label for="nationality"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Nacionalidade*</label>
+                                    <input type="text" id="nationality" name="nationality"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                       required >
+                                </div>
+
+                                <div>
+                                    
+                                </div>
+
+                                <div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Foto de Perfil -->
+                        <div class="border-b pb-4">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Foto do Jogador</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Foto de Perfil</label>
+                                    <div class="flex items-center">
+                                        <div id="profile-preview"
+                                            class="h-32 w-32 rounded-md bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-300 mr-4">
+                                            <i class="fas fa-user text-4xl"></i>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <label for="profile-image"
+                                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark cursor-pointer inline-block mb-2">
+                                                <i class="fas fa-upload mr-2"></i>Selecionar Foto
+                                            </label>
+                                            <input type="file" id="profile-image" name="profile_image" class="hidden"
+                                                accept="image/*">
+                                            <span id="file-name" class="text-sm text-gray-500">Nenhum arquivo
+                                                selecionado</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">Formatos permitidos: JPG, PNG. Tamanho máximo:
+                                        2MB</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informações Esportivas -->
+                        <div class="border-b pb-4">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Informações Esportivas</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="position"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Posição*</label>
+                                    <select id="position" name="position" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                        >
+                                        <option value="" disabled selected>Selecione uma posição</option>
+                                        <option value="Goleiro">Goleiro</option>
+                                        <option value="Zagueiro">Zagueiro</option>
+                                        <option value="Lateral Direito">Lateral Direito</option>
+                                        <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+                                        <option value="Volante">Volante</option>
+                                        <option value="Meio-Campo">Meio-Campo</option>
+                                        <option value="Atacante">Atacante</option>
+                                        <option value="Centroavante">Centroavante</option>
+                                        <option value="Ponta Direita">Ponta Direita</option>
+                                        <option value="Ponta Esquerda">Ponta Esquerda</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="shirt_number"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Número da Camisa</label>
+                                    <input type="number" id="shirt_number" name="shirt_number" min="1" max="99"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                </div>
+
+                                <div>
+                                    <label for="club" class="block text-sm font-medium text-gray-700 mb-1">Clube
+                                        Atual</label>
+                                    <select id="club" name="club"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                        <option value="">Sem clube</option>
+                                        <!-- Opções serão preenchidas via JavaScript -->
+                                    </select>
+                                </div>
+
+                                <div>
+                                    
+                                </div>
+
+                                <div>
+                                    <label for="height" class="block text-sm font-medium text-gray-700 mb-1">Altura
+                                        (cm)*</label>
+                                    <input type="number" id="height" name="height" min="100" max="250"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                       required >
+                                </div>
+
+                                <div>
+                                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Peso
+                                        (kg)*</label>
+                                    <input type="number" id="weight" name="weight" min="30" max="150"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informações Adicionais -->
+                        <div class="border-b pb-4">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Informações Adicionais</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="status"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Status*</label>
+                                    <select id="status" name="status"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+                                        >
+                                        <option value="Ativo">Ativo</option>
+                                        <option value="Lesionado">Lesionado</option>
+                                        <option value="Suspenso">Suspenso</option>
+                                        <option value="Aposentado">Aposentado</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    
+
+                                <div class="md:col-span-2">
+                                    <label for="notes"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Observações</label>
+                                    <textarea id="notes" name="notes" rows="3"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Galeria de Fotos -->
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Galeria de Fotos</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Adicionar fotos à
+                                        galeria do jogador</label>
+                                    <div class="flex flex-wrap gap-4" id="gallery-preview">
+                                        <!-- Previsualização das imagens aparecerá aqui -->
+                                        <div
+                                            class="h-32 w-32 rounded-md bg-gray-100 flex items-center justify-center border-2 border-dashed border-gray-300">
+                                            <label for="gallery-images"
+                                                class="cursor-pointer flex flex-col items-center justify-center h-full w-full">
+                                                <i class="fas fa-plus text-gray-400 text-xl mb-1"></i>
+                                                <span class="text-xs text-gray-500">Adicionar</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="gallery-images" name="gallery_images" class="hidden"
+                                        accept="image/*" multiple>
+                                    <p class="text-xs text-gray-500 mt-2">Você pode enviar até 5 fotos adicionais.
+                                        Formatos permitidos: JPG, PNG. Tamanho máximo por foto: 2MB</p>
+                                </div>
+
+                                <div id="selected-images" class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4">
+                                    <!-- Aqui aparecerão as miniaturas das imagens selecionadas -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" id="reset-btn"
+                                class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                                Limpar Formulário
+                            </button>
+                            <button id="submit-btn" type="submit"
+                                class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
+                                <i class="fas fa-save mr-2"></i>Salvar Jogador
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="../js/register-player.js"></script>
+</body>
+
+</html>

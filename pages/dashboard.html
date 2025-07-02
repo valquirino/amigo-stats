@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Jogadores | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Os scripts e estilos serão carregados pelo webpack -->
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed z-10 inset-y-0 left-0 w-64 bg-white shadow-md md:translate-x-0 -translate-x-full md:block hidden">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-xl font-bold text-primary">
+                   AmigoStats
+                </h1>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="dashboard.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-primary hover:bg-primary-dark hover:bg-opacity-20">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="players.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-alt mr-3"></i>
+                    Jogadores
+                </a>
+                <a href="clubs.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-shield-alt mr-3"></i>
+                    Clubes
+                </a>
+                <a href="register-player.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Registrar Jogador
+                </a>
+                <a href="register-club.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    Registrar Clube
+                </a>
+                <a href="user-profile.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-id-card mr-3"></i>
+                    Meu Perfil
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-0 w-full">
+                <button id="logout-btn" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 md:ml-64">
+            <!-- Navbar -->
+            <header class="bg-white shadow">
+                <div class="flex items-center justify-between px-6 py-3">
+                    <button id="sidebar-toggle" class="md:hidden text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p id="user-name" class="text-sm font-semibold text-gray-800">Arthur</p>
+                                    <p id="user-role" class="text-xs text-gray-500">administrador</p>
+                                </div>
+                                <a href="user-profile.html" class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="p-6">
+                <h1 class="text-2xl font-semibold text-gray-800 mb-6">Dashboard</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-primary-light text-primary mr-4">
+                                <i class="fas fa-user-alt text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium uppercase">Total de Jogadores</p>
+                                <p class="text-3xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
+                                <i class="fas fa-shield-alt text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium uppercase">Total de Clubes</p>
+                                <p class="text-3xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-100 text-yellow-500 mr-4">
+                                <i class="fas fa-star text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium uppercase">Jogadores Ativos</p>
+                                <p class="text-3xl font-bold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Atividades Recentes -->
+                <div id="recent-activities" class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Atividades Recentes</h2>
+                    <div class="text-gray-500 text-center py-8">
+                        <i class="fas fa-info-circle text-2xl mb-2"></i>
+                        <p>Nenhuma atividade recente para exibir.</p>
+                    </div>
+                </div>
+                
+                <!-- Informações Rápidas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Últimos Jogadores Registrados -->
+                    <div  id="ultimos-jogadores" class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">Últimos Jogadores Registrados</h2>
+                        <div class="text-gray-500 text-center py-8">
+                            <i class="fas fa-users text-2xl mb-2"></i>
+                            <p>Nenhum jogador registrado no sistema.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Últimos Clubes Registrados -->
+                    <div  id="ultimos-clubes"class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4">Últimos Clubes Registrados</h2>
+                        <div class="text-gray-500 text-center py-8">
+                            <i class="fas fa-shield-alt text-2xl mb-2"></i>
+                            <p>Nenhum clube registrado no sistema.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Scripts serão incluídos pelo webpack -->
+</body>
+</html> 
