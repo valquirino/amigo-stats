@@ -66,6 +66,12 @@ module.exports = {
       inject: 'body',
       chunks: ['main']
     }),
+    new HtmlWebpackPlugin({
+      template: './pages/access-requests.html',
+      filename: 'pages/access-requests.html',
+      inject: 'body',
+      chunks: ['main']
+    }),
     // Copiar os arquivos estáticos
     new CopyWebpackPlugin({
       patterns: [
