@@ -1,4 +1,4 @@
-import { data } from "autoprefixer";
+// Arquivo de autenticação e solicitação de acesso
 
 // Função para verificar se o usuário está logado
 function isLoggedIn() {
@@ -24,9 +24,38 @@ function getCurrentUser() {
     return JSON.parse(userData);
 }
 
+// Função para solicitar acesso
+async function requestAccess(email, password) {
+    try {
+        const response = await fetch('http://localhost:3333/auth/request-access', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email, 
+                password,
+                status: 'pending'
+            })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            return { success: true, message: 'Solicitação de acesso enviada com sucesso! Aguarde a aprovação do administrador.' };
+        } else {
+            return { success: false, message: data.error || 'Erro ao solicitar acesso. Tente novamente.' };
+        }
+    } catch (error) {
+        console.error('Erro ao solicitar acesso:', error);
+        return { success: false, message: 'Erro de conexão. Verifique sua internet e tente novamente.' };
+    }
+}
+
 // Lidar com o envio do formulário de login
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
+    const requestAccessBtn = document.getElementById('request-access-btn');
     
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -44,6 +73,46 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alert('Email ou senha incorretos. Tente novamente.');
     
+            }
+        });
+    }
+
+    // Event listener para o botão "Solicitar acesso"
+    if (requestAccessBtn) {
+        requestAccessBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Validar se os campos estão preenchidos
+            if (!email || !password) {
+                alert('Por favor, preencha o email e senha antes de solicitar acesso.');
+                return;
+            }
+            
+            // Validar formato do email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, insira um email válido.');
+                return;
+            }
+            
+            // Validar senha (mínimo 6 caracteres)
+            if (password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
+            
+            const result = await requestAccess(email, password);
+            
+            if (result.success) {
+                alert(result.message);
+                // Limpar os campos após sucesso
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+            } else {
+                alert(result.message);
             }
         });
     }
