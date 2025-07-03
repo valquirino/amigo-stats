@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const requestsTableBody = document.getElementById('requests-table-body');
   const emptyState = document.getElementById('empty-state');
-  const refreshBtn = document.getElementById('refresh-btn');
 
   async function fetchRequests() {
     try {
