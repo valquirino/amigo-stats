@@ -143,8 +143,11 @@ async function login(email, password) {
         const data = await response.json();
         
         if (response.ok) {
+            console.log(123, data);
+
             localStorage.setItem('userData', JSON.stringify({
                 ...data.user,
+                token: data.access_token,
                 isLoggedIn: true
             }));
 

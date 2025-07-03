@@ -12,6 +12,13 @@ function authFetch(url, options = {}) {
   document.addEventListener('DOMContentLoaded', async () => {
     if (!window.location.pathname.includes('user-profile.html')) return;
     
+    const user = JSON.parse(localStorage.getItem("userData"));  
+
+    if (user.role === "user") {
+      const a  = document.getElementById("access-requests");
+      console.log(12312312, a);
+      a.remove()
+    }
     
     try {
       const resposta = await authFetch('http://localhost:3333/users/profile');
