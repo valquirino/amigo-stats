@@ -1,3 +1,10 @@
+const user = JSON.parse(localStorage.getItem("userData"));  
+
+if (user.role === "user") {
+  const access_requests_sidebar  = document.getElementById("access-requests");
+
+  access_requests_sidebar.remove()
+}
 
 function authFetch(url, options = {}) {
     const token = localStorage.getItem('token')
@@ -15,9 +22,9 @@ function authFetch(url, options = {}) {
     const user = JSON.parse(localStorage.getItem("userData"));  
 
     if (user.role === "user") {
-      const a  = document.getElementById("access-requests");
-      console.log(12312312, a);
-      a.remove()
+      const access_requests_sidebar  = document.getElementById("access-requests");
+    
+      access_requests_sidebar.remove()
     }
     
     try {

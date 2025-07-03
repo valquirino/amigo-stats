@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = JSON.parse(localStorage.getItem("userData"));  
 
   if (user.role === "user") {
-    const a  = document.getElementById("access-requests");
-    console.log(12312312, a);
-    
+    const access_requests_sidebar  = document.getElementById("access-requests");
+
+    access_requests_sidebar.remove()
   }
 
   const API_BASE_URL = "http://localhost:3333";
