@@ -27,8 +27,7 @@ function getCurrentUser() {
 // Função para verificar se o usuário precisa trocar a senha
 function needsPasswordChange() {
     const user = getCurrentUser();
-    console.log('Verificando needsPasswordChange:', user);
-    return user && user.isChecked === false;
+    return user && user.is_checked === true;
 }
 
 // Função para criar e exibir o modal de troca de senha obrigatória
@@ -191,7 +190,7 @@ function createPasswordChangeModal() {
             if (response.ok) {
                 // Atualizar o status do usuário no localStorage
                 const user = getCurrentUser();
-                user.isChecked = true;
+                user.is_checked = false;
                 localStorage.setItem('userData', JSON.stringify(user));
                 
                 alert('Senha alterada com sucesso!');
@@ -204,7 +203,6 @@ function createPasswordChangeModal() {
                 alert(errorData.error || 'Erro ao alterar a senha. Verifique a senha atual.');
             }
         } catch (error) {
-            console.error('Erro ao alterar senha:', error);
             alert('Erro ao alterar a senha. Tente novamente.');
         }
     });
@@ -243,15 +241,8 @@ function checkPasswordChangeRequirement() {
         return;
     }
 
-    console.log('Verificando necessidade de troca de senha...');
-    const user = getCurrentUser();
-    console.log('Dados do usuário:', user);
-
     if (needsPasswordChange()) {
-        console.log('Usuário precisa trocar a senha. Exibindo modal...');
         createPasswordChangeModal();
-    } else {
-        console.log('Usuário não precisa trocar a senha.');
     }
 }
 
@@ -278,7 +269,6 @@ async function requestAccess(email, password) {
             return { success: false, message: data.error || 'Erro ao solicitar acesso. Tente novamente.' };
         }
     } catch (error) {
-        console.error('Erro ao solicitar acesso:', error);
         return { success: false, message: 'Erro de conexão. Verifique sua internet e tente novamente.' };
     }
 }
@@ -377,8 +367,6 @@ async function login(email, password) {
         const data = await response.json();
         
         if (response.ok) {
-            console.log(123, data);
-
             localStorage.setItem('userData', JSON.stringify({
                 ...data.user,
                 token: data.access_token,
@@ -390,7 +378,6 @@ async function login(email, password) {
             return false;
         }
     } catch (error) {
-        console.error('Erro ao tentar logar:', error);
         return false;
     }
 }
