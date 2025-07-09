@@ -26,21 +26,21 @@ function getCurrentUser() {
 
 // Função para verificar se o usuário precisa trocar a senha
 function needsPasswordChange() {
-    const user = getCurrentUser();
-    return user && user.isChecked === true;
+  const user = getCurrentUser();
+  return user && user.isChecked === true;
 }
 
 // Função para criar e exibir o modal de troca de senha obrigatória
 function createPasswordChangeModal() {
-    // Remove modal existente se houver
-    const existingModal = document.getElementById('password-change-modal');
-    if (existingModal) {
-        existingModal.remove();
-    }
+  // Remove modal existente se houver
+  const existingModal = document.getElementById("password-change-modal");
+  if (existingModal) {
+    existingModal.remove();
+  }
 
-    const modal = document.createElement('div');
-    modal.id = 'password-change-modal';
-    modal.style.cssText = `
+  const modal = document.createElement("div");
+  modal.id = "password-change-modal";
+  modal.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
@@ -52,8 +52,8 @@ function createPasswordChangeModal() {
         justify-content: center;
         z-index: 9999;
     `;
-    
-    modal.innerHTML = `
+
+  modal.innerHTML = `
         <div style="
             background-color: white;
             border-radius: 8px;
@@ -147,109 +147,121 @@ function createPasswordChangeModal() {
         </div>
     `;
 
-    document.body.appendChild(modal);
+  document.body.appendChild(modal);
 
-    // Adicionar event listener para o formulário
-    const form = modal.querySelector('#mandatory-password-form');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const currentPassword = document.getElementById('current-password-modal').value.trim();
-        const newPassword = document.getElementById('new-password-modal').value.trim();
-        const confirmPassword = document.getElementById('confirm-password-modal').value.trim();
+  // Adicionar event listener para o formulário
+  const form = modal.querySelector("#mandatory-password-form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            alert('Todos os campos são obrigatórios.');
-            return;
+    const currentPassword = document
+      .getElementById("current-password-modal")
+      .value.trim();
+    const newPassword = document
+      .getElementById("new-password-modal")
+      .value.trim();
+    const confirmPassword = document
+      .getElementById("confirm-password-modal")
+      .value.trim();
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("Todos os campos são obrigatórios.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("A nova senha e a confirmação devem ser iguais.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      alert("A nova senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:3333/users/update-password",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          }),
         }
+      );
 
-        if (newPassword !== confirmPassword) {
-            alert('A nova senha e a confirmação devem ser iguais.');
-            return;
-        }
+      if (response.ok) {
+        // Atualizar o status do usuário no localStorage
+        const user = getCurrentUser();
+        user.isChecked = false;
+        localStorage.setItem("userData", JSON.stringify(user));
 
-        if (newPassword.length < 6) {
-            alert('A nova senha deve ter pelo menos 6 caracteres.');
-            return;
-        }
+        alert("Senha alterada com sucesso!");
+        modal.remove();
 
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3333/users/update-password', {
-                method: 'PUT',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    currentPassword: currentPassword, 
-                    newPassword: newPassword 
-                })
-            });
+        // Recarregar a página para aplicar as mudanças
+        window.location.reload();
+      } else {
+        const errorData = await response.json();
+        alert(
+          errorData.error || "Erro ao alterar a senha. Verifique a senha atual."
+        );
+      }
+    } catch (error) {
+      alert("Erro ao alterar a senha. Tente novamente.");
+    }
+  });
 
-            if (response.ok) {
-                // Atualizar o status do usuário no localStorage
-                const user = getCurrentUser();
-                user.isChecked = false;
-                localStorage.setItem('userData', JSON.stringify(user));
-                
-                alert('Senha alterada com sucesso!');
-                modal.remove();
-                
-                // Recarregar a página para aplicar as mudanças
-                window.location.reload();
-            } else {
-                const errorData = await response.json();
-                alert(errorData.error || 'Erro ao alterar a senha. Verifique a senha atual.');
-            }
-        } catch (error) {
-            alert('Erro ao alterar a senha. Tente novamente.');
-        }
-    });
+  // Prevenir fechamento do modal - não permitir que o usuário feche
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
 
-    // Prevenir fechamento do modal - não permitir que o usuário feche
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
+  // Prevenir navegação com teclas
+  document.addEventListener("keydown", function preventNavigation(e) {
+    if (e.key === "Escape" || e.key === "F5" || (e.ctrlKey && e.key === "r")) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
 
-    // Prevenir navegação com teclas
-    document.addEventListener('keydown', function preventNavigation(e) {
-        if (e.key === 'Escape' || e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-
-    // Remover o event listener quando o modal for removido
-    modal.addEventListener('remove', () => {
-        document.removeEventListener('keydown', preventNavigation);
-    });
+  // Remover o event listener quando o modal for removido
+  modal.addEventListener("remove", () => {
+    document.removeEventListener("keydown", preventNavigation);
+  });
 }
 
 // Função para verificar e aplicar a verificação de senha em todas as páginas
 function checkPasswordChangeRequirement() {
-    // Não verificar na página de login
-    const isLoginPage = window.location.pathname.includes('index.html') || 
-                       window.location.href.includes('index.html') ||
-                       window.location.pathname.endsWith('/') ||
-                       window.location.pathname === '/' ||
-                       document.getElementById('login-form') !== null;
-    
-    if (isLoginPage) {
-        return;
-    }
+  // Não verificar na página de login
+  const isLoginPage =
+    window.location.pathname.includes("index.html") ||
+    window.location.href.includes("index.html") ||
+    window.location.pathname.endsWith("/") ||
+    window.location.pathname === "/" ||
+    document.getElementById("login-form") !== null;
 
-    // Verificar se o usuário está logado
-    if (!isLoggedIn()) {
-        return;
-    }
+  if (isLoginPage) {
+    return;
+  }
 
-    if (needsPasswordChange()) {
-        createPasswordChangeModal();
-    }
+  // Verificar se o usuário está logado
+  if (!isLoggedIn()) {
+    return;
+  }
+
+  if (needsPasswordChange()) {
+    createPasswordChangeModal();
+  }
 }
 
 // Função para solicitar acesso
@@ -267,16 +279,26 @@ async function requestAccess(email, password) {
       }),
     });
 
-        const data = await response.json();
-        
-        if (response.ok) {
-            return { success: true, message: 'Solicitação de acesso enviada com sucesso! Aguarde a aprovação do administrador.' };
-        } else {
-            return { success: false, message: data.error || 'Erro ao solicitar acesso. Tente novamente.' };
-        }
-    } catch (error) {
-        return { success: false, message: 'Erro de conexão. Verifique sua internet e tente novamente.' };
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        message:
+          "Solicitação de acesso enviada com sucesso! Aguarde a aprovação do administrador.",
+      };
+    } else {
+      return {
+        success: false,
+        message: data.error || "Erro ao solicitar acesso. Tente novamente.",
+      };
     }
+  } catch (error) {
+    return {
+      success: false,
+      message: "Erro de conexão. Verifique sua internet e tente novamente.",
+    };
+  }
 }
 
 // Lidar com o envio do formulário de login
@@ -284,59 +306,76 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const requestAccessBtn = document.getElementById("request-access-btn");
 
-    // Event listener para o botão "Solicitar acesso"
-    if (requestAccessBtn) {
-        requestAccessBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Validar se os campos estão preenchidos
-            if (!email || !password) {
-                alert('Por favor, preencha o email e senha antes de solicitar acesso.');
-                return;
-            }
-            
-            // Validar formato do email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Por favor, insira um email válido.');
-                return;
-            }
-            
-            // Validar senha (mínimo 6 caracteres)
-            if (password.length < 6) {
-                alert('A senha deve ter pelo menos 6 caracteres.');
-                return;
-            }
-            
-            const result = await requestAccess(email, password);
-            
-            if (result.success) {
-                alert(result.message);
-                // Limpar os campos após sucesso
-                document.getElementById('email').value = '';
-                document.getElementById('password').value = '';
-            } else {
-                alert(result.message);
-            }
-        });
-    }
-    
-    // Redirecionar para a página de login se não estiver logado (exceto na própria página de login)
-    if (!isLoggedIn() && !window.location.href.includes('index.html')) {
-        window.location.href = '../index.html';
-    }
-    
-    // Configurar o botão de logout, se existir
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    // Verificar se o usuário precisa trocar a senha
-    checkPasswordChangeRequirement();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const success = await login(email, password);
+
+      if (success) {
+        localStorage.setItem("token", success.access_token);
+        window.location.href = "pages/dashboard.html";
+      } else {
+        alert("Email ou senha incorretos. Tente novamente.");
+      }
+    });
+  }
+  // Event listener para o botão "Solicitar acesso"
+  if (requestAccessBtn) {
+    requestAccessBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // Validar se os campos estão preenchidos
+      if (!email || !password) {
+        alert("Por favor, preencha o email e senha antes de solicitar acesso.");
+        return;
+      }
+
+      // Validar formato do email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Por favor, insira um email válido.");
+        return;
+      }
+
+      // Validar senha (mínimo 6 caracteres)
+      if (password.length < 6) {
+        alert("A senha deve ter pelo menos 6 caracteres.");
+        return;
+      }
+
+      const result = await requestAccess(email, password);
+
+      if (result.success) {
+        alert(result.message);
+        // Limpar os campos após sucesso
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+      } else {
+        alert(result.message);
+      }
+    });
+  }
+
+  // Redirecionar para a página de login se não estiver logado (exceto na própria página de login)
+  if (!isLoggedIn() && !window.location.href.includes("index.html")) {
+    window.location.href = "../index.html";
+  }
+
+  // Configurar o botão de logout, se existir
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  }
+
+  // Verificar se o usuário precisa trocar a senha
+  checkPasswordChangeRequirement();
 });
 
 async function login(email, password) {
@@ -349,29 +388,31 @@ async function login(email, password) {
       body: JSON.stringify({ email, password }),
     });
 
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            localStorage.setItem('userData', JSON.stringify({
-                ...data.user,
-                token: data.access_token,
-                isLoggedIn: true
-            }));
+    const data = await response.json();
 
-            return data;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        return false;
-    }
+    if (response.ok) {
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          ...data.user,
+          token: data.access_token,
+          isLoggedIn: true,
+        })
+      );
 
-    if (response.status === 401) {
-      return "Email ou senha incorretos.";
+      return data;
+    } else {
+      return false;
     }
-    if (response.status === 403) {
-      return "Sua conta ainda não foi aprovada pelo administrador,para isso solicite acesso no botao abaixo";
-    }
-    return "Erro inesperado.";
+  } catch (error) {
+    return false;
+  }
+
+  if (response.status === 401) {
+    return "Email ou senha incorretos.";
+  }
+  if (response.status === 403) {
+    return "Sua conta ainda não foi aprovada pelo administrador,para isso solicite acesso no botao abaixo";
+  }
+  return "Erro inesperado.";
 }
