@@ -232,7 +232,13 @@ function createPasswordChangeModal() {
 // Função para verificar e aplicar a verificação de senha em todas as páginas
 function checkPasswordChangeRequirement() {
     // Não verificar na página de login
-    if (window.location.pathname.includes('index.html')) {
+    const isLoginPage = window.location.pathname.includes('index.html') || 
+                       window.location.href.includes('index.html') ||
+                       window.location.pathname.endsWith('/') ||
+                       window.location.pathname === '/' ||
+                       document.getElementById('login-form') !== null;
+    
+    if (isLoginPage) {
         return;
     }
 
