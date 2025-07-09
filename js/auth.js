@@ -263,7 +263,7 @@ function checkPasswordChangeRequirement() {
     createPasswordChangeModal();
   }
 }
-
+ 
 // Função para solicitar acesso
 async function requestAccess(email, password) {
   try {
@@ -272,10 +272,13 @@ async function requestAccess(email, password) {
       headers: {
         "Content-Type": "application/json",
       },
+    
       body: JSON.stringify({
         email,
         password,
-        status: "pending",
+        permission: "pending",
+        role:'user',
+        name: email.split('@')[0],
       }),
     });
 
@@ -353,8 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await requestAccess(email, password);
 
       if (result.success) {
-        alert(result.message);
-        // Limpar os campos após sucesso
+        alert("Seu acesso foi solicitado, aguardando confirmação de um admin.");
         document.getElementById("email").value = "";
         document.getElementById("password").value = "";
       } else {
@@ -416,3 +418,4 @@ async function login(email, password) {
   }
   return "Erro inesperado.";
 }
+
