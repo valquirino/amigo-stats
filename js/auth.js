@@ -36,6 +36,7 @@ async function requestAccess(email, password) {
         email,
         password,
         status: "pending",
+        role:"user",
       }),
     });
 
@@ -174,3 +175,28 @@ async function login(email, password) {
     return false;
   }
 }
+
+  async function sendRecoveryPassword() {
+    const email = document.getElementById('email').value;
+
+    if (!email) {
+      alert('Por favor, informe seu e-mail para que possamos recuperar sua senha .');
+      return;
+    }
+    alert('Uma nova senha foi enviada para o seu e-mail.');
+
+    try {
+      await fetch('http://localhost:3333/auth/generate-new-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+    } catch (error) {
+      console.error('Erro ao enviar a requisição:', error);
+    }
+  }
+
+
+

@@ -34,7 +34,7 @@
                         <label for="remember-me" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
                     </div>
                     
-                    <a href="#" class="text-sm font-medium text-primary hover:text-primary-dark">Esqueceu a senha?</a>
+                    <a id="forgot-password-btn"  href="#" class="text-sm font-medium text-primary hover:text-primary-dark" onclick= "sendRecoveryPassword()">Esqueceu a senha?</a>
                 </div>
                 
                 <div>
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
+    <script src="./js/auth.js"></script>
 
-    <!-- Script com a autenticação será injetado pelo webpack -->
 </body>
 </html> 
