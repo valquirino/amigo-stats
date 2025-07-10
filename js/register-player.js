@@ -1,3 +1,11 @@
+const user = JSON.parse(localStorage.getItem("userData"));  
+
+if (user.role === "user") {
+  const access_requests_sidebar  = document.getElementById("access-requests");
+
+  access_requests_sidebar.remove()
+}
+
 function authFetch(url, options = {}) {
   const token = localStorage.getItem('token');
   const headers = {

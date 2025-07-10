@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = JSON.parse(localStorage.getItem("userData"));  
 
   if (user.role === "user") {
-    const a  = document.getElementById("access-requests");
-    console.log(12312312, a);
-    
+    const access_requests_sidebar  = document.getElementById("access-requests");
+
+    access_requests_sidebar.remove()
   }
 
   const API_BASE_URL = "http://localhost:3333";
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function fetchRequests() {
     try {
-      const res = await fetch(`${API_BASE_URL}/access-requests`, { headers });
+      const res = await fetch(`${API_BASE_URL}/users/pending`, { headers });
       if (!res.ok) throw new Error("Erro ao buscar requisições");
       const data = await res.json();
       renderRequests(data);
@@ -74,18 +74,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           ${request.email}
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          ${formatDate(request.date)}
+          ${formatDate(request.createdAt)}
         </td>
         <td class="px-6 py-4 whitespace-nowrap">
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
-            request.status
+            request.permission
           )}">
-            ${getStatusText(request.status)}
+            ${getStatusText(request.permission)}
           </span>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
           ${
-            request.status === "pending"
+            request.permission === "pending"
               ? `
             <button data-id="${request.id}" class="approve-btn text-green-600 hover:text-green-900 mr-3">
               <i class="fas fa-check"></i>
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function approveRequest(id) {
     try {
-      const res = await fetch(`${API_BASE_URL}/access-requests/${id}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/users/approve-requests/${id}`, {
         method: "PUT",
         headers,
       });
@@ -142,8 +142,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function deleteRequest(id) {
     try {
-      const res = await fetch(`${API_BASE_URL}/access-requests/${id}`, {
-        method: "DELETE",
+      const res = await fetch(`${API_BASE_URL}/users/forbid-request/${id}`, {
+        method: "PUT",
         headers,
       });
       if (!res.ok) throw new Error("Erro ao remover requisição");
@@ -157,8 +157,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   }
+  
 
   function getStatusBadgeClass(status) {
     switch (status) {
