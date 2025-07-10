@@ -55,17 +55,20 @@ function authFetch(url, options = {}) {
       e.preventDefault();
       
       const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();      
+      const email = document.getElementById('email').value.trim();  
+      const role=  document.getElementById('position').value.trim()
+
       
-      if (!name || !email) {
-        alert('Nome e email são obrigatórios.');
+      if (!name || !email || !role) {
+        alert('Nome ,email e cargo  são obrigatórios.');
         return;
       }
+      console.log(name,email,role)
   
       try {
         const resposta = await authFetch('http://localhost:3333/users/update-profile', {
           method: 'PUT',
-          body: JSON.stringify({ name, email })
+          body: JSON.stringify({ name, email, role  })
         });
 
   

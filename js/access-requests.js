@@ -41,68 +41,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     emptyState.classList.add("hidden");
     requestsTableBody.innerHTML = requests
-      .map(
-        (request) => `
-      <tr class="hover:bg-gray-50">
-        <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 h-10 w-10">
-              <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
-                <i class="fas fa-${
-                  request.type === "player" ? "user" : "shield-alt"
-                }"></i>
+    .map(
+      (request) => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                  <i class="fas fa-user"></i>
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">
+                  ${request.name}
+                </div>
               </div>
             </div>
-            <div class="ml-4">
-              <div class="text-sm font-medium text-gray-900">${
-                request.name
-              }</div>
-              <div class="text-sm text-gray-500">${request.phone || ""}</div>
-            </div>
-          </div>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            request.type === "player"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-purple-100 text-purple-800"
-          }">
-            ${request.type === "player" ? "Jogador" : "Clube"}
-          </span>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          ${request.email}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          ${formatDate(request.createdAt)}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
-            request.permission
-          )}">
-            ${getStatusText(request.permission)}
-          </span>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-          ${
-            request.permission === "pending"
-              ? `
-            <button data-id="${request.id}" class="approve-btn text-green-600 hover:text-green-900 mr-3">
-              <i class="fas fa-check"></i>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              ${request.role}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            ${request.email}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${formatDate(request.createdAt)}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
+              request.permission
+            )}">
+              ${getStatusText(request.permission)}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            ${
+              request.permission === "pending"
+                ? `
+              <button data-id="${request.id}" class="approve-btn text-green-600 hover:text-green-900 mr-3">
+                <i class="fas fa-check"></i>
+              </button>
+            `
+                : ""
+            }
+            <button data-id="${request.id}" class="delete-btn text-red-600 hover:text-red-900">
+              <i class="fas fa-trash"></i>
             </button>
-          `
-              : ""
-          }
-          <button data-id="${
-            request.id
-          }" class="delete-btn text-red-600 hover:text-red-900">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      </tr>
-    `
-      )
-      .join("");
+          </td>
+        </tr>
+      `
+    )
+    .join("");
+    
     // Adiciona listeners
     document.querySelectorAll(".approve-btn").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
