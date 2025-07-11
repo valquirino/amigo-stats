@@ -27,7 +27,7 @@ function getCurrentUser() {
 // Função para verificar se o usuário precisa trocar a senha
 function needsPasswordChange() {
   const user = getCurrentUser();
-  return user && user.isChecked === true;
+  return user && user.isChanged === true;
 }
 
 // Função para criar e exibir o modal de troca de senha obrigatória
@@ -199,7 +199,7 @@ function createPasswordChangeModal() {
       if (response.ok) {
         // Atualizar o status do usuário no localStorage
         const user = getCurrentUser();
-        user.isChecked = false;
+        user.isChanged = false;
         localStorage.setItem("userData", JSON.stringify(user));
 
         alert("Senha alterada com sucesso!");
