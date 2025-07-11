@@ -304,6 +304,7 @@ async function requestAccess(email, password) {
   }
 }
 
+
 // Lidar com o envio do formulário de login
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
@@ -316,13 +317,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const success = await login(email, password);
+      const result = await login(email, password);
 
-      if (success) {
-        localStorage.setItem("token", success.access_token);
+      if (result.access_token) {
+        localStorage.setItem("token", result.access_token);
         window.location.href = "pages/dashboard.html";
       } else {
-        alert("Email ou senha incorretos. Tente novamente.");
+        alert(result.error || "Email ou senha incorretos. Tente novamente.");
       }
     });
   }
@@ -404,18 +405,17 @@ async function login(email, password) {
 
       return data;
     } else {
-      return false;
+      // Verificar status específicos para mensagens de erro
+      if (response.status === 401) {
+        return { error: "Email ou senha incorretos." };
+      }
+      if (response.status === 403) {
+        return { error: "Sua conta ainda não foi aprovada pelo administrador, para isso solicite acesso no botão abaixo" };
+      }
+      return { error: "Erro inesperado." };
     }
   } catch (error) {
-    return false;
+    return { error: "Erro de conexão. Verifique sua internet e tente novamente." };
   }
-
-  if (response.status === 401) {
-    return "Email ou senha incorretos.";
-  }
-  if (response.status === 403) {
-    return "Sua conta ainda não foi aprovada pelo administrador,para isso solicite acesso no botao abaixo";
-  }
-  return "Erro inesperado.";
 }
 
