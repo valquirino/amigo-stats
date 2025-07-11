@@ -222,6 +222,46 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (refreshBtn) {
     refreshBtn.addEventListener("click", fetchRequests);
   }
+    document.addEventListener("keydown", async (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+  
+        const permission = document.getElementById("status-filter")?.value;
+        const date = document.getElementById("date-filter")?.value;
+  
+        const payload = { permission, date };
+
+        if (!payload.permission){
+          delete payload.permission
+        }
+
+        if (!payload.date) {
+          delete payload.date;
+        }
+
+        console.log('payload',payload)
+  
+        try {
+          const res = await fetch(`${API_BASE_URL}/users/filter-request`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+          });
+  
+          if (!res.ok) {
+            throw new Error("Erro ao filtrar requisições");
+          }
+  
+          const data = await res.json();
+          renderRequests(data);
+          showNotification("Requisições filtradas com sucesso!", "success");
+        } catch (error) {
+          renderRequests([]);
+          showNotification("Erro ao filtrar requisições", "error");
+        }
+      }
+    });
+  
 
   fetchRequests();
 });
