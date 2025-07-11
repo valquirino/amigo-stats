@@ -1,9 +1,9 @@
 const user = JSON.parse(localStorage.getItem("userData"));  
 
 if (user?.role === "user") {
-  const access_requests_sidebar  = document.getElementById("access-requests");
-
-  access_requests_sidebar.remove()
+  const access_requests_sidebar = document.getElementById("access-requests");
+  
+  access_requests_sidebar.style.display = 'none';
 }
 
 function authFetch(url, options = {}) {
@@ -19,28 +19,30 @@ function authFetch(url, options = {}) {
   document.addEventListener('DOMContentLoaded', async () => {
     if (!window.location.pathname.includes('user-profile.html')) return;
     
-    const user = JSON.parse(localStorage.getItem("userData"));  
-
-    if (user.role === "user") {
-      const access_requests_sidebar  = document.getElementById("access-requests");
+    const user = JSON.parse(localStorage.getItem("userData"));
     
-      access_requests_sidebar.remove()
+    if (user?.role === "user") {
+      const access_requests_sidebar = document.getElementById("access-requests");
+    
+      // Esconder com CSS (mais elegante que remove())
+      access_requests_sidebar.style.display = 'none';
     }
     
     try {
       const resposta = await authFetch('http://localhost:3333/users/profile');
 
-      
-        if (!resposta.ok) throw new Error('Erro ao buscar dados do perfil');
+      if (!resposta.ok) throw new Error('Erro ao buscar dados do perfil');
         
-        const usuario = await resposta.json();
+      const usuario = await resposta.json();
   
       document.getElementById('profile-name').textContent = usuario.name;
       document.getElementById('profile-email').textContent = usuario.email;
       document.getElementById('profile-role').textContent = `Cargo: ${usuario.role}`;
+      document.getElementById('nameTopo').textContent = usuario.name;
       document.getElementById('name').value = usuario.name;
-      document.getElementById('email').value = usuario.email;
+      document.getElementById('email').value  = usuario.email;
       document.getElementById('position').value = usuario.role;
+      document.getElementById('positionTopo').textContent = usuario.role;
   
       const dataFormatada = new Date(usuario.created_at).toLocaleString('pt-BR');
       document.getElementById('create-login').value = dataFormatada;

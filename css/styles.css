@@ -26,4 +26,22 @@
   .focus\:border-primary:focus {
     border-color: theme('colors.primary');
   }
+  
+  /* Classe para esconder elementos */
+  .hidden-element {
+    display: none !important;
+  }
+  
+  /* Classe para desabilitar elementos */
+  .disabled-element {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+  
+  /* Classe para esconder com fade out */
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 } 
