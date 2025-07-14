@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
   if (!window.location.pathname.includes("access-requests.html")) return;
 
-  const user = JSON.parse(localStorage.getItem("userData"));  
+  const user = JSON.parse(localStorage.getItem("userData"));
 
   if (user?.role === "user") {
-    const access_requests_sidebar  = document.getElementById("access-requests");
+    const access_requests_sidebar = document.getElementById("access-requests");
 
-    access_requests_sidebar.remove()
+    access_requests_sidebar.remove();
   }
 
   const API_BASE_URL = "http://localhost:3333";
@@ -157,12 +157,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  
 
   function getStatusBadgeClass(status) {
     switch (status) {
@@ -222,44 +221,49 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (refreshBtn) {
     refreshBtn.addEventListener("click", fetchRequests);
   }
-    document.addEventListener("keydown", async (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-  
-        const permission = document.getElementById("status-filter")?.value;
-        const date = document.getElementById("date-filter")?.value;
-  
-        const payload = { permission, date };
 
-        if (!payload.permission){
-          delete payload.permission
-        }
+  const searchBtnAcess = document.getElementById("search-btn-acess");
 
-        if (!payload.date) {
-          delete payload.date;
-        }
-  
-        try {
-          const res = await fetch(`${API_BASE_URL}/users/filter-request`, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(payload),
-          });
-  
-          if (!res.ok) {
-            throw new Error("Erro ao filtrar requisições");
-          }
-  
-          const data = await res.json();
-          renderRequests(data);
-          showNotification("Requisições filtradas com sucesso!", "success");
-        } catch (error) {
-          renderRequests([]);
-          showNotification("Erro ao filtrar requisições", "error");
-        }
+  searchBtnAcess.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const permission = document.getElementById("status-filter")?.value;
+    const startDate = document.getElementById("date-start-filter")?.value;
+    const endDate = document.getElementById("date-end-filter")?.value;
+
+    const payload = { permission, endDate, startDate };
+
+    if (!payload.permission) {
+      delete payload.permission;
+    }
+
+    if (!payload.startDate) {
+      delete payload.startDate;
+    }
+
+    if (!payload.endDate) {
+      delete payload.endDate;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/filter-request`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erro ao filtrar requisições");
       }
-    });
-  
+
+      const data = await res.json();
+      renderRequests(data);
+      showNotification("Requisições filtradas com sucesso!", "success");
+    } catch (error) {
+      renderRequests([]);
+      showNotification("Erro ao filtrar requisições", "error");
+    }
+  });
 
   fetchRequests();
 });
