@@ -238,8 +238,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!payload.date) {
           delete payload.date;
         }
-
-        console.log('payload',payload)
   
         try {
           const res = await fetch(`${API_BASE_URL}/users/filter-request`, {
