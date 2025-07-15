@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const user = JSON.parse(localStorage.getItem("userData"));
 
+  document.getElementById('user-name-top').textContent=user.name
+  document.getElementById('user-role-top').textContent=user.role
+
+
   if (user?.role === "user") {
     const access_requests_sidebar = document.getElementById("access-requests");
 
@@ -252,16 +256,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        throw new Error("Erro ao filtrar requisições");
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Erro ao filtrar requisições");
       }
 
-      const data = await res.json();
-      renderRequests(data);
+      renderRequests(data.data);
       showNotification("Requisições filtradas com sucesso!", "success");
     } catch (error) {
       renderRequests([]);
-      showNotification("Erro ao filtrar requisições", "error");
+      showNotification(error.message, "Error desconhecido  ");
     }
   });
 

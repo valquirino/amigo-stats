@@ -1,5 +1,8 @@
 const user = JSON.parse(localStorage.getItem("userData"));  
 
+document.getElementById('user-name-top').textContent=user.name
+document.getElementById('user-role-top').textContent=user.role
+
 if (user?.role === "user") {
   const access_requests_sidebar = document.getElementById("access-requests");
   
