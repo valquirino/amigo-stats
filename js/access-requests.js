@@ -45,68 +45,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     emptyState.classList.add("hidden");
     requestsTableBody.innerHTML = requests
-      .map(
-        (request) => `
-      <tr class="hover:bg-gray-50">
-        <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 h-10 w-10">
-              <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
-                <i class="fas fa-${
-                  request.type === "player" ? "user" : "shield-alt"
-                }"></i>
+    .map(
+      (request) => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                  <i class="fas fa-user-shield"></i>
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${request.name}</div>
+                <div class="text-sm text-gray-500">${request.phone || ""}</div>
               </div>
             </div>
-            <div class="ml-4">
-              <div class="text-sm font-medium text-gray-900">${
-                request.name
-              }</div>
-              <div class="text-sm text-gray-500">${request.phone || ""}</div>
-            </div>
-          </div>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            request.type === "player"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-purple-100 text-purple-800"
-          }">
-            ${request.type === "player" ? "Jogador" : "Clube"}
-          </span>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          ${request.email}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          ${formatDate(request.createdAt)}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
-            request.permission
-          )}">
-            ${getStatusText(request.permission)}
-          </span>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-          ${
-            request.permission === "pending"
-              ? `
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              Admin
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            ${request.email}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${formatDate(request.createdAt)}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(request.permission)}">
+              ${getStatusText(request.permission)}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <button data-id="${request.id}" class="approve-btn text-green-600 hover:text-green-900 mr-3">
               <i class="fas fa-check"></i>
             </button>
-          `
-              : ""
-          }
-          <button data-id="${
-            request.id
-          }" class="delete-btn text-red-600 hover:text-red-900">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      </tr>
-    `
-      )
-      .join("");
+            <button data-id="${request.id}" class="delete-btn text-red-600 hover:text-red-900">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `
+    ).join("");
+    
     // Adiciona listeners
     document.querySelectorAll(".approve-btn").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
@@ -234,8 +216,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const permission = document.getElementById("status-filter")?.value;
     const startDate = document.getElementById("date-start-filter")?.value;
     const endDate = document.getElementById("date-end-filter")?.value;
+    const name = document.getElementById("name-filter")?.value;
 
-    const payload = { permission, endDate, startDate };
+    const payload = { permission, endDate, startDate, name };
 
     if (!payload.permission) {
       delete payload.permission;
@@ -247,6 +230,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!payload.endDate) {
       delete payload.endDate;
+    }
+
+    if (!payload.name) {
+      delete payload.name;
     }
 
     try {
