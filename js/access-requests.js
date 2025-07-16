@@ -3,9 +3,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const user = JSON.parse(localStorage.getItem("userData"));
 
-  document.getElementById('user-name-top').textContent=user.name
-  document.getElementById('user-role-top').textContent=user.role
-
+  document.getElementById("user-name-top").textContent = user.name;
+  document.getElementById("user-role-top").textContent = user.role;
 
   if (user?.role === "user") {
     const access_requests_sidebar = document.getElementById("access-requests");
@@ -52,7 +51,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="flex items-center">
               <div class="flex-shrink-0 h-10 w-10">
                 <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
-                  <i class="fas fa-user-shield"></i>
+                  ${
+                    request.permission === 'approved'
+                      ? '<i class="fa-solid fa-user-tie"></i>'
+                      : '<i class="fas fa-user-shield"></i>'
+                  }
                 </div>
               </div>
               <div class="ml-4">
@@ -63,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              Admin
+              ${request.role}
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -73,13 +76,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             ${formatDate(request.createdAt)}
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(request.permission)}">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
+              request.permission
+            )}">
               ${getStatusText(request.permission)}
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <button data-id="${request.id}" class="approve-btn text-green-600 hover:text-green-900 mr-3">
-              <i class="fas fa-check"></i>
+              ${
+                request.permission === 'approved'
+                  ? '<i class="fa-solid fa-user-tie"></i>'
+                  : '<i class="fas fa-check"></i>'
+              }
             </button>
             <button data-id="${request.id}" class="delete-btn text-red-600 hover:text-red-900">
               <i class="fas fa-trash"></i>
@@ -87,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </td>
         </tr>
       `
-    ).join("");
+    ).join("")
     
     // Adiciona listeners
     document.querySelectorAll(".approve-btn").forEach((btn) => {
