@@ -88,11 +88,48 @@
             <main class="p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-semibold text-gray-800">Ligas</h1>
-                    <button id="new-connection-btn" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
-                        <i class="fas fa-plus mr-2"></i>Nova Ligação
-                    </button>
+                    <div class="flex space-x-3">
+                        <button id="new-league-btn" class="px-4 py-2 bg-green-600 rounded-md text-white hover:bg-green-700">
+                            <i class="fas fa-plus mr-2"></i>Nova Liga
+                        </button>
+                        <button id="new-connection-btn" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
+                            <i class="fas fa-link mr-2"></i>Nova Ligação
+                        </button>
+                    </div>
                 </div>
                 
+                <!-- Formulário de Nova Liga -->
+                <div id="new-league-form" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Nova Liga</h2>
+                    <form id="league-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="league-name" class="block text-sm font-medium text-gray-700 mb-1">Nome da Liga</label>
+                                <input type="text" id="league-name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: Brasileirão Série A">
+                            </div>
+                            
+                            <div>
+                                <label for="teams-count" class="block text-sm font-medium text-gray-700 mb-1">Número de Times</label>
+                                <input type="number" id="teams-count" name="teamsCount" required min="1" max="50" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: 20">
+                            </div>
+                            
+                            <div>
+                                <label for="games-count" class="block text-sm font-medium text-gray-700 mb-1">Número de Jogos</label>
+                                <input type="number" id="games-count" name="gamesCount" required min="1" max="1000" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: 380">
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" id="cancel-league" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-green-600 rounded-md text-white hover:bg-green-700">
+                                <i class="fas fa-save mr-2"></i>Salvar Liga
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Formulário de Nova Ligação -->
                 <div id="new-connection-form" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Nova Ligação Clube-Liga</h2>
@@ -106,12 +143,9 @@
                             </div>
                             
                             <div>
-                                <label for="league-select" class="block text-sm font-medium text-gray-700 mb-1">Série</label>
+                                <label for="league-select" class="block text-sm font-medium text-gray-700 mb-1">Liga</label>
                                 <select id="league-select" name="league" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
-                                    <option value="">Selecione uma série</option>
-                                    <option value="A">Série A</option>
-                                    <option value="B">Série B</option>
-                                    <option value="C">Série C</option>
+                                    <option value="">Selecione uma liga</option>
                                 </select>
                             </div>
                             
@@ -145,12 +179,9 @@
                         </div>
                         
                         <div class="mb-4 md:mb-0 md:w-1/4">
-                            <label for="league-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Série</label>
+                            <label for="league-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Liga</label>
                             <select id="league-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
-                                <option value="">Todas as séries</option>
-                                <option value="A">Série A</option>
-                                <option value="B">Série B</option>
-                                <option value="C">Série C</option>
+                                <option value="">Todas as ligas</option>
                             </select>
                         </div>
                         
@@ -169,14 +200,46 @@
                     </div>
                 </div>
                 
+                <!-- Tabela de Ligas -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Ligas Cadastradas</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome da Liga</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número de Times</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número de Jogos</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data de Criação</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leagues-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Conteúdo será carregado via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Estado vazio das ligas -->
+                    <div id="leagues-empty-state" class="hidden px-6 py-10 text-center text-gray-500">
+                        <i class="fas fa-trophy text-2xl mb-2"></i>
+                        <p>Nenhuma liga cadastrada. <button id="leagues-empty-state-new-btn" class="text-green-600 hover:underline">Criar uma nova liga</button>.</p>
+                    </div>
+                </div>
+
                 <!-- Tabela de Ligações -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Ligações Clube-Liga</h3>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clube</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Série</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Liga</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ano</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data de Criação</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
@@ -188,7 +251,7 @@
                         </table>
                     </div>
                     
-                    <!-- Estado vazio -->
+                    <!-- Estado vazio das ligações -->
                     <div id="empty-state" class="hidden px-6 py-10 text-center text-gray-500">
                         <i class="fas fa-link text-2xl mb-2"></i>
                         <p>Nenhuma ligação encontrada. <button id="empty-state-new-btn" class="text-primary hover:underline">Criar uma nova ligação</button>.</p>

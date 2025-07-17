@@ -26,6 +26,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const emptyState = document.getElementById("empty-state");
   const emptyStateNewBtn = document.getElementById("empty-state-new-btn");
   
+  // Elementos do DOM para ligas
+  const newLeagueBtn = document.getElementById("new-league-btn");
+  const newLeagueForm = document.getElementById("new-league-form");
+  const leagueForm = document.getElementById("league-form");
+  const cancelLeague = document.getElementById("cancel-league");
+  const leaguesTableBody = document.getElementById("leagues-table-body");
+  const leaguesEmptyState = document.getElementById("leagues-empty-state");
+  const leaguesEmptyStateNewBtn = document.getElementById("leagues-empty-state-new-btn");
+  
   // Filtros
   const clubFilter = document.getElementById("club-filter");
   const leagueFilter = document.getElementById("league-filter");
@@ -79,6 +88,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Fetch leagues for dropdowns
+  async function fetchLeagues() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/leagues`, { headers });
+      if (!res.ok) throw new Error("Erro ao buscar ligas");
+      const leagues = await res.json();
+      
+      // Populate league selects
+      const leagueSelects = [leagueSelect, leagueFilter];
+      leagueSelects.forEach(select => {
+        select.innerHTML = '<option value="">Selecione uma liga</option>';
+        leagues.forEach(league => {
+          const option = document.createElement('option');
+          option.value = league.id;
+          option.textContent = league.name;
+          select.appendChild(option);
+        });
+      });
+      
+      return leagues;
+    } catch (err) {
+      showNotification("Erro ao carregar ligas", "error");
+      return [];
+    }
+  }
+
+  // Fetch leagues
+  async function fetchLeaguesList() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/leagues`, { headers });
+      if (!res.ok) throw new Error("Erro ao buscar ligas");
+      const leagues = await res.json();
+      renderLeagues(leagues);
+    } catch (err) {
+      renderLeagues([]);
+      showNotification("Erro ao carregar ligas", "error");
+    }
+  }
+
   // Fetch league connections
   async function fetchConnections() {
     try {
@@ -90,6 +138,63 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderConnections([]);
       showNotification("Erro ao carregar ligações", "error");
     }
+  }
+
+  // Render leagues table
+  function renderLeagues(leagues) {
+    if (!leaguesTableBody || !leaguesEmptyState) return;
+    
+    if (!leagues || leagues.length === 0) {
+      leaguesTableBody.innerHTML = "";
+      leaguesEmptyState.classList.remove("hidden");
+      return;
+    }
+    
+    leaguesEmptyState.classList.add("hidden");
+    leaguesTableBody.innerHTML = leagues
+      .map(
+        (league) => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <div class="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center text-white">
+                  <i class="fas fa-trophy"></i>
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${league.name}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            ${league.teamsCount}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            ${league.gamesCount}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${formatDate(league.createdAt)}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button data-id="${league.id}" class="delete-league-btn text-red-600 hover:text-red-900">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `
+      )
+      .join("");
+
+    // Add delete listeners for leagues
+    document.querySelectorAll(".delete-league-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = btn.getAttribute("data-id");
+        if (confirm("Tem certeza que deseja remover esta liga? Esta ação não pode ser desfeita.")) {
+          await deleteLeague(id);
+        }
+      });
+    });
   }
 
   // Render connections table
@@ -122,7 +227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLeagueBadgeClass(connection.league)}">
-              Série ${connection.league}
+              ${connection.league.name}
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -152,6 +257,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Create new league
+  async function createLeague(leagueData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/leagues`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(leagueData),
+      });
+      
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Erro ao criar liga");
+      }
+      
+      showNotification("Liga criada com sucesso!", "success");
+      hideLeagueForm();
+      await fetchLeagues();
+      await fetchLeaguesList();
+    } catch (err) {
+      showNotification(err.message, "error");
+    }
+  }
+
   // Create new connection
   async function createConnection(connectionData) {
     try {
@@ -171,6 +299,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       fetchConnections();
     } catch (err) {
       showNotification(err.message, "error");
+    }
+  }
+
+  // Delete league
+  async function deleteLeague(id) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/leagues/${id}`, {
+        method: "DELETE",
+        headers,
+      });
+      
+      if (!res.ok) throw new Error("Erro ao remover liga");
+      
+      showNotification("Liga removida com sucesso!", "success");
+      await fetchLeagues();
+      await fetchLeaguesList();
+    } catch (err) {
+      showNotification("Erro ao remover liga", "error");
     }
   }
 
@@ -194,7 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Filter connections
   async function filterConnections() {
     const clubId = clubFilter.value;
-    const league = leagueFilter.value;
+    const leagueId = leagueFilter.value;
     const year = yearFilter.value;
     
     try {
@@ -202,7 +348,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams();
       
       if (clubId) params.append("clubId", clubId);
-      if (league) params.append("league", league);
+      if (leagueId) params.append("leagueId", leagueId);
       if (year) params.append("year", year);
       
       if (params.toString()) {
@@ -220,21 +366,53 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Form handlers
+  function showLeagueForm() {
+    newLeagueForm.classList.remove("hidden");
+    newLeagueBtn.classList.add("hidden");
+    newConnectionBtn.classList.add("hidden");
+  }
+
+  function hideLeagueForm() {
+    newLeagueForm.classList.add("hidden");
+    newLeagueBtn.classList.remove("hidden");
+    newConnectionBtn.classList.remove("hidden");
+    leagueForm.reset();
+  }
+
   function showConnectionForm() {
     newConnectionForm.classList.remove("hidden");
     newConnectionBtn.classList.add("hidden");
+    newLeagueBtn.classList.add("hidden");
   }
 
   function hideConnectionForm() {
     newConnectionForm.classList.add("hidden");
     newConnectionBtn.classList.remove("hidden");
+    newLeagueBtn.classList.remove("hidden");
     connectionForm.reset();
   }
 
   // Event listeners
+  newLeagueBtn.addEventListener("click", showLeagueForm);
+  cancelLeague.addEventListener("click", hideLeagueForm);
+  leaguesEmptyStateNewBtn.addEventListener("click", showLeagueForm);
+  
   newConnectionBtn.addEventListener("click", showConnectionForm);
   cancelConnection.addEventListener("click", hideConnectionForm);
   emptyStateNewBtn.addEventListener("click", showConnectionForm);
+
+  leagueForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(leagueForm);
+    const leagueData = {
+      name: formData.get("name"),
+      teamsCount: parseInt(formData.get("teamsCount")),
+      gamesCount: parseInt(formData.get("gamesCount")),
+    };
+    
+    await createLeague(leagueData);
+  });
 
   connectionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -242,7 +420,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formData = new FormData(connectionForm);
     const connectionData = {
       clubId: formData.get("club"),
-      league: formData.get("league"),
+      leagueId: formData.get("league"),
       year: parseInt(formData.get("year")),
     };
     
@@ -263,16 +441,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Utility functions
   function getLeagueBadgeClass(league) {
-    switch (league) {
-      case "A":
-        return "bg-green-100 text-green-800";
-      case "B":
-        return "bg-blue-100 text-blue-800";
-      case "C":
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+    // Generate a consistent color based on league name
+    const colors = [
+      "bg-green-100 text-green-800",
+      "bg-blue-100 text-blue-800", 
+      "bg-purple-100 text-purple-800",
+      "bg-yellow-100 text-yellow-800",
+      "bg-red-100 text-red-800",
+      "bg-indigo-100 text-indigo-800"
+    ];
+    
+    if (!league || !league.name) return "bg-gray-100 text-gray-800";
+    
+    const index = league.name.length % colors.length;
+    return colors[index];
   }
 
   function formatDate(dateString) {
@@ -316,5 +498,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize
   populateYearOptions();
   await fetchClubs();
+  await fetchLeagues();
+  await fetchLeaguesList();
   await fetchConnections();
 }); 
