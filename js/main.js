@@ -35,8 +35,8 @@ function initializeSidebar() {
 // Função para carregar dados do usuário no cabeçalho
 function loadUserInfo() {
     const user = JSON.parse(localStorage.getItem('currentUser')) || null;
-    const userNameElement = document.getElementById('user-name');
-    const userRoleElement = document.getElementById('user-role');
+    const userNameElement = document.getElementById('user-name-top');
+    const userRoleElement = document.getElementById('user-role-top');
     
     if (user && userNameElement) {
         userNameElement.textContent = user.name;

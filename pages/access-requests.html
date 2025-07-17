@@ -72,8 +72,8 @@
                         <div class="relative">
                             <div class="flex items-center space-x-4">
                                 <div class="text-right">
-                                    <p id="user-name" class="text-sm font-semibold text-gray-800">Arthur</p>
-                                    <p id="user-role" class="text-xs text-gray-500">administrador</p>
+                                    <p id="user-name-top" class="text-sm font-semibold text-gray-800">Arthur</p>
+                                    <p id="user-role-top" class="text-xs text-gray-500">administrador</p>
                                 </div>
                                 <a href="user-profile.html" class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
                                     <i class="fas fa-user"></i>
@@ -104,9 +104,24 @@
                             </select>
                         </div>
                         <div>
-                            <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-2">Data</label>
-                            <input type="date" id="date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <label for="date-start-filter" class="block text-sm font-medium text-gray-700 mb-2">Data Início</label>
+                            <input type="date" id="date-start-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
                         </div>
+                        <div>
+                            <label for="date-end-filter" class="block text-sm font-medium text-gray-700 mb-2">Data Fim</label>
+                            <input type="date" id="date-end-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="name-filter" class="block text-sm font-medium text-gray-700 mb-2">nome</label>
+                            <input type="text" id="name-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        </div>
+
+                        <div class="md:w-auto self-end">
+                            <button id="search-btn-acess" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                                Pesquisar
+                            </button>
+                        </div>
+                    
                     </div>
                 </div>
 
