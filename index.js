@@ -6,11 +6,7 @@ import './css/styles.css';
 
 // Importar os scripts principais
 import './js/auth.js';
-import './js/main.js';
-import './js/user-profile.js';
 import './js/dashboard.js';
-import './js/access-requests.js';
-import './js/league-connections.js';
 
 // Log para indicar que o Webpack está funcionando
 console.log('Webpack carregado e funcionando! Live-reload ativado.');

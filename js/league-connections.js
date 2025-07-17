@@ -259,7 +259,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Create new league
   async function createLeague(leagueData) {
-   
     try {
       const res = await fetch(`${API_BASE_URL}/leagues`, {
         method: "POST",
@@ -415,7 +414,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         teamsCount: parseInt(formData.get("teamsCount")),
         gamesCount: parseInt(formData.get("gamesCount")),
       };
-  
+
       await createLeague(leagueData);
     } finally {
       submitBtn.disabled = false;
