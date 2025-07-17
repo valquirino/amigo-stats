@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Jogadores | Ligações de Ligas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Os scripts e estilos serão carregados pelo webpack -->
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed z-10 inset-y-0 left-0 w-64 bg-white shadow-md md:translate-x-0 -translate-x-full md:block hidden">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-xl font-bold text-primary">
+                   AmigoStats
+                </h1>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="dashboard.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="players.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-alt mr-3"></i>
+                    Jogadores
+                </a>
+                <a href="clubs.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-shield-alt mr-3"></i>
+                    Clubes
+                </a>
+                <a href="league-connections.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-primary hover:bg-primary-dark hover:bg-opacity-20">
+                    <i class="fas fa-link mr-3"></i>
+                    Ligações de Ligas
+                </a>
+                <a href="register-player.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Registrar Jogador
+                </a>
+                <a href="register-club.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    Registrar Clube
+                </a>
+                <a id="access-requests" href="access-requests.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-user-clock mr-3"></i>
+                    Requisições de Acesso
+                </a>
+                <a href="user-profile.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-id-card mr-3"></i>
+                    Meu Perfil
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-0 w-full">
+                <button id="logout-btn" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sair
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 md:ml-64">
+            <!-- Navbar -->
+            <header class="bg-white shadow">
+                <div class="flex items-center justify-between px-6 py-3">
+                    <button id="sidebar-toggle" class="md:hidden text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p id="user-name" class="text-sm font-semibold text-gray-800">Arthur</p>
+                                    <p id="user-role" class="text-xs text-gray-500">administrador</p>
+                                </div>
+                                <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-800">Ligações de Ligas</h1>
+                    <button id="new-connection-btn" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
+                        <i class="fas fa-plus mr-2"></i>Nova Ligação
+                    </button>
+                </div>
+                
+                <!-- Formulário de Nova Ligação -->
+                <div id="new-connection-form" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Nova Ligação Clube-Liga</h2>
+                    <form id="connection-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="club-select" class="block text-sm font-medium text-gray-700 mb-1">Clube</label>
+                                <select id="club-select" name="club" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                    <option value="">Selecione um clube</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="league-select" class="block text-sm font-medium text-gray-700 mb-1">Série</label>
+                                <select id="league-select" name="league" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                    <option value="">Selecione uma série</option>
+                                    <option value="A">Série A</option>
+                                    <option value="B">Série B</option>
+                                    <option value="C">Série C</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="year-select" class="block text-sm font-medium text-gray-700 mb-1">Ano</label>
+                                <select id="year-select" name="year" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                    <option value="">Selecione um ano</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" id="cancel-connection" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
+                                <i class="fas fa-save mr-2"></i>Salvar Ligação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Filtros -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+                        <div class="mb-4 md:mb-0 flex-1">
+                            <label for="club-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Clube</label>
+                            <select id="club-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Todos os clubes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4 md:mb-0 md:w-1/4">
+                            <label for="league-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Série</label>
+                            <select id="league-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Todas as séries</option>
+                                <option value="A">Série A</option>
+                                <option value="B">Série B</option>
+                                <option value="C">Série C</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4 md:mb-0 md:w-1/4">
+                            <label for="year-filter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Ano</label>
+                            <select id="year-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Todos os anos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="md:w-auto self-end">
+                            <button id="clear-filters" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
+                                Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabela de Ligações -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clube</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Série</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ano</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data de Criação</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="connections-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Conteúdo será carregado via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Estado vazio -->
+                    <div id="empty-state" class="hidden px-6 py-10 text-center text-gray-500">
+                        <i class="fas fa-link text-2xl mb-2"></i>
+                        <p>Nenhuma ligação encontrada. <button id="empty-state-new-btn" class="text-primary hover:underline">Criar uma nova ligação</button>.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/league-connections.js"></script>
+</body>
+</html> 
