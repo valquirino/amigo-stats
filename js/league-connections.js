@@ -259,6 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Create new league
   async function createLeague(leagueData) {
+   
     try {
       const res = await fetch(`${API_BASE_URL}/leagues`, {
         method: "POST",
@@ -403,16 +404,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   leagueForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
-    const formData = new FormData(leagueForm);
-    const leagueData = {
-      name: formData.get("name"),
-      teamsCount: parseInt(formData.get("teamsCount")),
-      gamesCount: parseInt(formData.get("gamesCount")),
-    };
-    
-    await createLeague(leagueData);
+  
+    const submitBtn = leagueForm.querySelector("button[type='submit']");
+    submitBtn.disabled = true;
+  
+    try {
+      const formData = new FormData(leagueForm);
+      const leagueData = {
+        name: formData.get("name"),
+        teamsCount: parseInt(formData.get("teamsCount")),
+        gamesCount: parseInt(formData.get("gamesCount")),
+      };
+  
+      await createLeague(leagueData);
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
+  
 
   connectionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
