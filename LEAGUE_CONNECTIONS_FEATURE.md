@@ -1,4 +1,4 @@
-# Funcionalidade de Ligações de Ligas
+# Funcionalidade de Ligas
 
 ## Visão Geral
 
