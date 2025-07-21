@@ -43,23 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Selects do formulário
   const clubSelect = document.getElementById("club-select");
   const leagueSelect = document.getElementById("league-select");
-  const yearSelect = document.getElementById("year-select");
-
-  // Populate year options (2000 to current year + 1)
-  function populateYearOptions() {
-    const currentYear = new Date().getFullYear();
-    const yearSelects = [yearSelect, yearFilter];
-    
-    yearSelects.forEach(select => {
-      select.innerHTML = '<option value="">Selecione um ano</option>';
-      for (let year = currentYear + 1; year >= 2000; year--) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        select.appendChild(option);
-      }
-    });
-  }
 
   // Fetch clubs for dropdowns
   async function fetchClubs() {
@@ -132,6 +115,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch(`${API_BASE_URL}/league-club-conciliations`, { headers });
       if (!res.ok) throw new Error("Erro ao buscar ligações");
       const connections = await res.json();
+
+      console.log('dsdsdsdds', connections)
 
       renderConnections(connections);
     } catch (err) {
@@ -374,7 +359,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const year = yearFilter.value;
     
     try {
-      let url = `${API_BASE_URL}/league-connections`;
+      let url = `${API_BASE_URL}/league-club-conciliations`;
       const params = new URLSearchParams();
       
       if (clubId) params.append("clubId", clubId);
@@ -516,7 +501,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Initialize
-  populateYearOptions();
   await fetchClubs();
   await fetchLeagues();
   await fetchLeaguesList();
