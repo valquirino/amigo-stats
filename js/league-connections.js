@@ -130,9 +130,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Fetch league connections
   async function fetchConnections() {
     try {
-      const res = await fetch(`${API_BASE_URL}/league-connections`, { headers });
+      const res = await fetch(`${API_BASE_URL}/league-club-conciliations`, { headers });
       if (!res.ok) throw new Error("Erro ao buscar ligações");
       const connections = await res.json();
+
       renderConnections(connections);
     } catch (err) {
       renderConnections([]);
@@ -198,54 +199,62 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Render connections table
-  function renderConnections(connections) {
+  async function renderConnections(connections) {
     if (!connectionsTableBody || !emptyState) return;
-    
+  
     if (!connections || connections.length === 0) {
       connectionsTableBody.innerHTML = "";
       emptyState.classList.remove("hidden");
       return;
     }
-    
+  
     emptyState.classList.add("hidden");
-    connectionsTableBody.innerHTML = connections
-      .map(
-        (connection) => `
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 h-10 w-10">
-                <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
-                  <i class="fas fa-shield-alt"></i>
+  
+    const tableRows = await Promise.all(
+      connections.map(async (connection) => {
+        const clubRes = await fetch(`${API_BASE_URL}/clubs/${connection.clubId}`, { headers });
+        const club = await clubRes.json();
+  
+        const leagueRes = await fetch(`${API_BASE_URL}/leagues/${connection.leagueId}`, { headers });
+        const league = await leagueRes.json();
+  
+        return `
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                    <i class="fas fa-shield-alt"></i>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">${club.name}</div>
                 </div>
               </div>
-              <div class="ml-4">
-                <div class="text-sm font-medium text-gray-900">${connection.club.name}</div>
-                <div class="text-sm text-gray-500">${connection.club.location || ""}</div>
-              </div>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLeagueBadgeClass(connection.league)}">
-              ${connection.league.name}
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            ${connection.year}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${formatDate(connection.createdAt)}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-            <button data-id="${connection.id}" class="delete-btn text-red-600 hover:text-red-900">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      `
-      )
-      .join("");
-
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLeagueBadgeClass(league)}">
+                ${league.name}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              ${connection.year}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${formatDate(connection.createdAt)}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <button data-id="${connection.id}" class="delete-btn text-red-600 hover:text-red-900">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      })
+    );
+  
+    connectionsTableBody.innerHTML = tableRows.join("");
+  
     // Add delete listeners
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
@@ -256,6 +265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+  
 
   // Create new league
   async function createLeague(leagueData) {
@@ -295,6 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify(payload),
       });
 
+
       
       if (!res.ok) {
         const error = await res.json();
@@ -330,7 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Delete connection
   async function deleteConnection(id) {
     try {
-      const res = await fetch(`${API_BASE_URL}/league-connections/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/league-club-conciliations/${id}`, {
         method: "DELETE",
         headers,
       });
@@ -517,3 +528,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fetchLeaguesList();
   await fetchConnections();
 }); 
+
+async function fetchLeagueName(id) {
+  const res = await fetch(`${API_BASE_URL}/leagues/${id}`);
+  const data = await res.json();
+  return data.name;
+}
+
+async function fetchClubName(id) {
+  const res = await fetch(`${API_BASE_URL}/clubs/${id}`);
+  const data = await res.json();
+  return data.name;
+}
