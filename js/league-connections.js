@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!window.location.pathname.includes("league-connections.html")) return;
+  const isLeagueConnectionsPage = window.location.pathname.includes("league-connections.html");
+  const isLeagueRegisterPage = window.location.pathname.includes("league-register.html");
+  
+  if (!isLeagueConnectionsPage && !isLeagueRegisterPage) return;
 
   const user = JSON.parse(localStorage.getItem("userData"));  
 
@@ -17,23 +20,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     "Content-Type": "application/json",
   };
 
-  // Elementos do DOM
-  const newConnectionBtn = document.getElementById("new-connection-btn");
-  const newConnectionForm = document.getElementById("new-connection-form");
-  const connectionForm = document.getElementById("connection-form");
-  const cancelConnection = document.getElementById("cancel-connection");
+  // Elementos do DOM - Página de listagem
   const connectionsTableBody = document.getElementById("connections-table-body");
   const emptyState = document.getElementById("empty-state");
   const emptyStateNewBtn = document.getElementById("empty-state-new-btn");
   
-  // Elementos do DOM para ligas
-  const newLeagueBtn = document.getElementById("new-league-btn");
-  const newLeagueForm = document.getElementById("new-league-form");
-  const leagueForm = document.getElementById("league-form");
-  const cancelLeague = document.getElementById("cancel-league");
+  // Elementos do DOM para ligas - Página de listagem
   const leaguesTableBody = document.getElementById("leagues-table-body");
   const leaguesEmptyState = document.getElementById("leagues-empty-state");
   const leaguesEmptyStateNewBtn = document.getElementById("leagues-empty-state-new-btn");
+  
+  // Elementos do DOM - Página de registro
+  const leagueForm = document.getElementById("league-form");
+  const connectionForm = document.getElementById("connection-form");
   
   // Filtros
   const clubFilter = document.getElementById("club-filter");
@@ -282,9 +281,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       
       showNotification("Liga criada com sucesso!", "success");
-      hideLeagueForm();
-      await fetchLeagues();
-      await fetchLeaguesList();
+      
+      // Se estiver na página de registro, limpar o formulário
+      if (isLeagueRegisterPage && leagueForm) {
+        leagueForm.reset();
+      }
+      
+      // Se estiver na página de listagem, atualizar as listas
+      if (isLeagueConnectionsPage) {
+        await fetchLeagues();
+        await fetchLeaguesList();
+      }
     } catch (err) {
       showNotification(err.message, "error");
     }
@@ -292,7 +299,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Create new connection
   async function createConnection(connectionData) {
-
     const payload = {
       leagueId: Number(connectionData.leagueId),
       clubId: Number(connectionData.clubId),
@@ -305,16 +311,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         body: JSON.stringify(payload),
       });
 
-
-      
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.message || "Erro ao criar ligação");
       }
       
       showNotification("Ligação criada com sucesso!", "success");
-      hideConnectionForm();
-      fetchConnections();
+      
+      // Se estiver na página de registro, limpar o formulário
+      if (isLeagueRegisterPage && connectionForm) {
+        connectionForm.reset();
+      }
+      
+      // Se estiver na página de listagem, atualizar a lista
+      if (isLeagueConnectionsPage) {
+        fetchConnections();
+      }
     } catch (err) {
       showNotification(err.message, "error");
     }
@@ -383,87 +395,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Form handlers
-  function showLeagueForm() {
-    newLeagueForm.classList.remove("hidden");
-    newLeagueBtn.classList.add("hidden");
-    newConnectionBtn.classList.add("hidden");
-  }
 
-  function hideLeagueForm() {
-    newLeagueForm.classList.add("hidden");
-    newLeagueBtn.classList.remove("hidden");
-    newConnectionBtn.classList.remove("hidden");
-    leagueForm.reset();
-  }
 
-  function showConnectionForm() {
-    newConnectionForm.classList.remove("hidden");
-    newConnectionBtn.classList.add("hidden");
-    newLeagueBtn.classList.add("hidden");
-  }
+  // Event listeners - Página de registro
+  if (isLeagueRegisterPage) {
+    if (leagueForm) {
+      leagueForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+      
+        const submitBtn = leagueForm.querySelector("button[type='submit']");
+        submitBtn.disabled = true;
+      
+        try {
+          const formData = new FormData(leagueForm);
+          const leagueData = {
+            name: formData.get("name"),
+            teamsCount: parseInt(formData.get("teamsCount")),
+            gamesCount: parseInt(formData.get("gamesCount")),
+          };
 
-  function hideConnectionForm() {
-    newConnectionForm.classList.add("hidden");
-    newConnectionBtn.classList.remove("hidden");
-    newLeagueBtn.classList.remove("hidden");
-    connectionForm.reset();
-  }
-
-  // Event listeners
-  newLeagueBtn.addEventListener("click", showLeagueForm);
-  cancelLeague.addEventListener("click", hideLeagueForm);
-  leaguesEmptyStateNewBtn.addEventListener("click", showLeagueForm);
-  
-  newConnectionBtn.addEventListener("click", showConnectionForm);
-  cancelConnection.addEventListener("click", hideConnectionForm);
-  emptyStateNewBtn.addEventListener("click", showConnectionForm);
-
-  leagueForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-  
-    const submitBtn = leagueForm.querySelector("button[type='submit']");
-    submitBtn.disabled = true;
-  
-    try {
-      const formData = new FormData(leagueForm);
-      const leagueData = {
-        name: formData.get("name"),
-        teamsCount: parseInt(formData.get("teamsCount")),
-        gamesCount: parseInt(formData.get("gamesCount")),
-      };
-
-      await createLeague(leagueData);
-    } finally {
-      submitBtn.disabled = false;
+          await createLeague(leagueData);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
     }
-  });
-  
 
-  connectionForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(connectionForm);
-    const connectionData = {
-      clubId: formData.get("club"),
-      leagueId: formData.get("league"),
-      year: parseInt(formData.get("year")),
-    };
-    
-    await createConnection(connectionData);
-  });
-
-  // Filter event listeners
-  clubFilter.addEventListener("change", filterConnections);
-  leagueFilter.addEventListener("change", filterConnections);
-  yearFilter.addEventListener("change", filterConnections);
+    if (connectionForm) {
+      connectionForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(connectionForm);
+        const connectionData = {
+          clubId: formData.get("club"),
+          leagueId: formData.get("league"),
+          year: parseInt(formData.get("year")),
+        };
+        
+        await createConnection(connectionData);
+      });
+    }
+  }
   
-  clearFilters.addEventListener("click", () => {
-    clubFilter.value = "";
-    leagueFilter.value = "";
-    yearFilter.value = "";
-    fetchConnections();
-  });
+  // Event listeners - Página de listagem (botões de estado vazio)
+  if (isLeagueConnectionsPage) {
+    if (leaguesEmptyStateNewBtn) {
+      leaguesEmptyStateNewBtn.addEventListener("click", () => {
+        window.location.href = "league-register.html";
+      });
+    }
+    
+    if (emptyStateNewBtn) {
+      emptyStateNewBtn.addEventListener("click", () => {
+        window.location.href = "league-register.html";
+      });
+    }
+  }
+
+  // Filter event listeners - Página de listagem
+  if (isLeagueConnectionsPage) {
+    if (clubFilter) clubFilter.addEventListener("change", filterConnections);
+    if (leagueFilter) leagueFilter.addEventListener("change", filterConnections);
+    if (yearFilter) yearFilter.addEventListener("change", filterConnections);
+    
+    if (clearFilters) {
+      clearFilters.addEventListener("click", () => {
+        clubFilter.value = "";
+        leagueFilter.value = "";
+        yearFilter.value = "";
+        fetchConnections();
+      });
+    }
+  }
 
   // Utility functions
   function getLeagueBadgeClass(league) {
