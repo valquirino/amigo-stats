@@ -43,6 +43,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Selects do formulário
   const clubSelect = document.getElementById("club-select");
   const leagueSelect = document.getElementById("league-select");
+  const yearSelect = document.getElementById("year-select");
+
+  // Populate year options (2000 to current year + 1)
+  function populateYearOptions() {
+    const currentYear = new Date().getFullYear();
+    
+    if (isLeagueConnectionsPage && yearFilter) {
+      console.log('Populating yearFilter for league-connections page');
+      yearFilter.innerHTML = '<option value="">Todos os anos</option>';
+      for (let year = currentYear + 1; year >= 2000; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      }
+      console.log(`Final options count for yearFilter:`, yearFilter.options.length);
+    }
+    
+    if (isLeagueRegisterPage && yearSelect) {
+      console.log('Populating yearSelect for league-register page');
+      yearSelect.innerHTML = '<option value="">Selecione um ano</option>';
+      for (let year = currentYear + 1; year >= 2000; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+      console.log(`Final options count for yearSelect:`, yearSelect.options.length);
+    }
+  }
 
   // Fetch clubs for dropdowns
   async function fetchClubs() {
@@ -51,20 +81,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Erro ao buscar clubes");
       const clubs = await res.json();
       
-      // Populate club selects
-      const clubSelects = [clubSelect, clubFilter];
-      clubSelects.forEach(select => {
-        select.innerHTML = '<option value="">Selecione um clube</option>';
+      // Populate club selects based on current page
+      if (isLeagueConnectionsPage && clubFilter) {
+        console.log('Populating clubFilter for league-connections page');
+        clubFilter.innerHTML = '<option value="">Todos os clubes</option>';
         clubs.forEach(club => {
           const option = document.createElement('option');
           option.value = club.id;
           option.textContent = club.name;
-          select.appendChild(option);
+          clubFilter.appendChild(option);
+          console.log(`Added option for club: ${club.name} (ID: ${club.id})`);
         });
-      });
+        console.log(`Final options count for clubFilter:`, clubFilter.options.length);
+      }
+      
+      if (isLeagueRegisterPage && clubSelect) {
+        console.log('Populating clubSelect for league-register page');
+        clubSelect.innerHTML = '<option value="">Selecione um clube</option>';
+        clubs.forEach(club => {
+          const option = document.createElement('option');
+          option.value = club.id;
+          option.textContent = club.name;
+          clubSelect.appendChild(option);
+          console.log(`Added option for club: ${club.name} (ID: ${club.id})`);
+        });
+        console.log(`Final options count for clubSelect:`, clubSelect.options.length);
+      }
       
       return clubs;
     } catch (err) {
+      console.error('Error in fetchClubs:', err);
       showNotification("Erro ao carregar clubes", "error");
       return [];
     }
@@ -77,17 +123,32 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Erro ao buscar ligas");
       const leagues = await res.json();
       
-      // Populate league selects
-      const leagueSelects = [leagueSelect, leagueFilter];
-      leagueSelects.forEach(select => {
-        select.innerHTML = '<option value="">Selecione uma liga</option>';
+      // Populate league selects based on current page
+      if (isLeagueConnectionsPage && leagueFilter) {
+        console.log('Populating leagueFilter for league-connections page');
+        leagueFilter.innerHTML = '<option value="">Todas as ligas</option>';
         leagues.forEach(league => {
           const option = document.createElement('option');
           option.value = league.id;
           option.textContent = league.name;
-          select.appendChild(option);
+          leagueFilter.appendChild(option);
+          console.log(`Added option for league: ${league.name} (ID: ${league.id})`);
         });
-      });
+        console.log(`Final options count for leagueFilter:`, leagueFilter.options.length);
+      }
+      
+      if (isLeagueRegisterPage && leagueSelect) {
+        console.log('Populating leagueSelect for league-register page');
+        leagueSelect.innerHTML = '<option value="">Selecione uma liga</option>';
+        leagues.forEach(league => {
+          const option = document.createElement('option');
+          option.value = league.id;
+          option.textContent = league.name;
+          leagueSelect.appendChild(option);
+          console.log(`Added option for league: ${league.name} (ID: ${league.id})`);
+        });
+        console.log(`Final options count for leagueSelect:`, leagueSelect.options.length);
+      }
       
       return leagues;
     } catch (err) {
@@ -111,15 +172,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Fetch league connections
   async function fetchConnections() {
+    console.log('fetchConnections called');
     try {
       const res = await fetch(`${API_BASE_URL}/league-club-conciliations`, { headers });
       if (!res.ok) throw new Error("Erro ao buscar ligações");
       const connections = await res.json();
 
-      console.log('dsdsdsdds', connections)
+      console.log('Fetched connections:', connections);
 
       renderConnections(connections);
     } catch (err) {
+      console.error('Error in fetchConnections:', err);
       renderConnections([]);
       showNotification("Erro ao carregar ligações", "error");
     }
@@ -184,14 +247,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Render connections table
   async function renderConnections(connections) {
-    if (!connectionsTableBody || !emptyState) return;
+    console.log('renderConnections called with:', connections);
+    console.log('connectionsTableBody:', connectionsTableBody);
+    console.log('emptyState:', emptyState);
+    
+    if (!connectionsTableBody || !emptyState) {
+      console.log('Missing required DOM elements');
+      return;
+    }
   
     if (!connections || connections.length === 0) {
+      console.log('No connections to render');
       connectionsTableBody.innerHTML = "";
       emptyState.classList.remove("hidden");
       return;
     }
   
+    console.log('Rendering', connections.length, 'connections');
     emptyState.classList.add("hidden");
   
     const tableRows = await Promise.all(
@@ -237,7 +309,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       })
     );
   
+    console.log('Generated table rows:', tableRows);
+    console.log('Joined HTML:', tableRows.join(""));
     connectionsTableBody.innerHTML = tableRows.join("");
+    console.log('After setting innerHTML, connectionsTableBody.innerHTML length:', connectionsTableBody.innerHTML.length);
   
     // Add delete listeners
     document.querySelectorAll(".delete-btn").forEach((btn) => {
@@ -354,9 +429,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Filter connections
   async function filterConnections() {
+    console.log('filterConnections called');
     const clubId = clubFilter.value;
     const leagueId = leagueFilter.value;
     const year = yearFilter.value;
+    
+    console.log('Filter values:', { clubId, leagueId, year });
     
     try {
       let url = `${API_BASE_URL}/league-club-conciliations`;
@@ -370,12 +448,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         url += `?${params.toString()}`;
       }
       
+      console.log('Fetching URL:', url);
       const res = await fetch(url, { headers });
       if (!res.ok) throw new Error("Erro ao filtrar ligações");
       
       const connections = await res.json();
+      console.log('Filtered connections:', connections);
       renderConnections(connections);
     } catch (err) {
+      console.error('Error in filterConnections:', err);
       showNotification("Erro ao filtrar ligações", "error");
     }
   }
@@ -501,6 +582,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Initialize
+  populateYearOptions();
   await fetchClubs();
   await fetchLeagues();
   await fetchLeaguesList();
