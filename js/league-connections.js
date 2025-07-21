@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const clubFilter = document.getElementById("club-filter");
   const leagueFilter = document.getElementById("league-filter");
   const yearFilter = document.getElementById("year-filter");
-  const clearFilters = document.getElementById("clear-filters");
+  const searchFilters = document.getElementById("search-filters");
   
   // Selects do formulário
   const clubSelect = document.getElementById("club-select");
@@ -454,17 +454,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Filter event listeners - Página de listagem
   if (isLeagueConnectionsPage) {
-    if (clubFilter) clubFilter.addEventListener("change", filterConnections);
-    if (leagueFilter) leagueFilter.addEventListener("change", filterConnections);
-    if (yearFilter) yearFilter.addEventListener("change", filterConnections);
-    
-    if (clearFilters) {
-      clearFilters.addEventListener("click", () => {
-        clubFilter.value = "";
-        leagueFilter.value = "";
-        yearFilter.value = "";
-        fetchConnections();
-      });
+    if (searchFilters) {
+      searchFilters.addEventListener("click", filterConnections);
     }
   }
 
