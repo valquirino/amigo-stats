@@ -7,6 +7,7 @@ import './css/styles.css';
 // Importar os scripts principais
 import './js/auth.js';
 import './js/dashboard.js';
+import './js/access-requests.js';
 
 // Log para indicar que o Webpack está funcionando
 console.log('Webpack carregado e funcionando! Live-reload ativado.');

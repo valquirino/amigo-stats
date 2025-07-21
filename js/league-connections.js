@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Fetch clubs for dropdowns
   async function fetchClubs() {
     try {
-      const res = await fetch(`${API_BASE_URL}/clubs`, { headers });
+      const res = await fetch(`${API_BASE_URL}/clubs/list`, { headers });
       if (!res.ok) throw new Error("Erro ao buscar clubes");
       const clubs = await res.json();
       
@@ -282,12 +282,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Create new connection
   async function createConnection(connectionData) {
+
+    const payload = {
+      leagueId: Number(connectionData.leagueId),
+      clubId: Number(connectionData.clubId),
+      year: Number(connectionData.year),
+    };
     try {
-      const res = await fetch(`${API_BASE_URL}/league-connections`, {
+      const res = await fetch(`${API_BASE_URL}/league-club-conciliations`, {
         method: "POST",
         headers,
-        body: JSON.stringify(connectionData),
+        body: JSON.stringify(payload),
       });
+
       
       if (!res.ok) {
         const error = await res.json();
