@@ -53,7 +53,8 @@ if (filtros.country === 'Todos os Paises') {
 }
 
 if (filtros.league === 'Todas as ligas'){
-  delete filtros.league
+  delete filtros.league 
+}
     try {
       const resposta = await authFetch("http://localhost:3333/clubs/filter", {
         method: "POST",
@@ -182,4 +183,4 @@ if (filtros.league === 'Todas as ligas'){
 
   preencherFiltrosDeClubes();
   carregarClubes();
-}});
+});

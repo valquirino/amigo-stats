@@ -34,6 +34,10 @@
                     <i class="fas fa-link mr-3"></i>
                     Ligas
                 </a>
+                <a href="league-register.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    Registrar Liga
+                </a>
                 <a href="register-player.html" class="sidebar-item group flex items-center px-4 py-3 mt-1 text-base font-medium rounded-md text-gray-700 hover:bg-primary-light hover:bg-opacity-20">
                     <i class="fas fa-user-plus mr-3"></i>
                     Registrar Jogador
@@ -89,84 +93,13 @@
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-semibold text-gray-800">Ligas</h1>
                     <div class="flex space-x-3">
-                        <button id="new-league-btn" class="px-4 py-2 bg-green-600 rounded-md text-white hover:bg-green-700">
-                            <i class="fas fa-plus mr-2"></i>Nova Liga
-                        </button>
-                        <button id="new-connection-btn" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
-                            <i class="fas fa-link mr-2"></i>Nova Ligação
-                        </button>
+                        <a href="league-register.html" class="px-4 py-2 bg-green-600 rounded-md text-white hover:bg-green-700">
+                            <i class="fas fa-plus mr-2"></i>Registrar Liga
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Formulário de Nova Liga -->
-                <div id="new-league-form" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Nova Liga</h2>
-                    <form id="league-form" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label for="league-name" class="block text-sm font-medium text-gray-700 mb-1">Nome da Liga</label>
-                                <input type="text" id="league-name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: Brasileirão Série A">
-                            </div>
-                            
-                            <div>
-                                <label for="teams-count" class="block text-sm font-medium text-gray-700 mb-1">Número de Times</label>
-                                <input type="number" id="teams-count" name="teamsCount" required min="1" max="50" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: 20">
-                            </div>
-                            
-                            <div>
-                                <label for="games-count" class="block text-sm font-medium text-gray-700 mb-1">Número de Jogos</label>
-                                <input type="number" id="games-count" name="gamesCount" required min="1" max="1000" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="Ex: 380">
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3">
-                            <button type="button" id="cancel-league" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
-                                Cancelar
-                            </button>
-                            <button type="submit" class="px-4 py-2 bg-green-600 rounded-md text-white hover:bg-green-700">
-                                <i class="fas fa-save mr-2"></i>Salvar Liga
-                            </button>
-                        </div>
-                    </form>
-                </div>
 
-                <!-- Formulário de Nova Ligação -->
-                <div id="new-connection-form" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Nova Ligação Clube-Liga</h2>
-                    <form id="connection-form" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label for="club-select" class="block text-sm font-medium text-gray-700 mb-1">Clube</label>
-                                <select id="club-select" name="club" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
-                                    <option value="">Selecione um clube</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label for="league-select" class="block text-sm font-medium text-gray-700 mb-1">Liga</label>
-                                <select id="league-select" name="league" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
-                                    <option value="">Selecione uma liga</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label for="year-select" class="block text-sm font-medium text-gray-700 mb-1">Ano</label>
-                                <select id="year-select" name="year" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary">
-                                    <option value="">Selecione um ano</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3">
-                            <button type="button" id="cancel-connection" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
-                                Cancelar
-                            </button>
-                            <button type="submit" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
-                                <i class="fas fa-save mr-2"></i>Salvar Ligação
-                            </button>
-                        </div>
-                    </form>
-                </div>
                 
                 <!-- Filtros -->
                 <div class="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -193,8 +126,8 @@
                         </div>
                         
                         <div class="md:w-auto self-end">
-                            <button id="clear-filters" class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300">
-                                Limpar Filtros
+                            <button id="search-filters" class="px-4 py-2 bg-primary rounded-md text-white hover:bg-primary-dark">
+                                <i class="fas fa-search mr-2"></i>Pesquisar
                             </button>
                         </div>
                     </div>

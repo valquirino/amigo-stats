@@ -78,6 +78,12 @@ module.exports = {
       inject: 'body',
       chunks: ['main']
     }),
+    new HtmlWebpackPlugin({
+      template: './pages/league-register.html',
+      filename: 'pages/league-register.html',
+      inject: 'body',
+      chunks: ['main']
+    }),
     // Copiar os arquivos estáticos
     new CopyWebpackPlugin({
       patterns: [
