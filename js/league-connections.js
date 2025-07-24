@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const isLeagueRegisterPage = window.location.pathname.includes("league-register.html");
   
   if (!isLeagueConnectionsPage && !isLeagueRegisterPage) return;
-
   const user = JSON.parse(localStorage.getItem("userData"));  
 
   if (user?.role === "user") {
@@ -395,36 +394,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Filter connections
   async function filterConnections() {
     const clubId = clubFilter.value;
     const leagueId = leagueFilter.value;
     const year = yearFilter.value;
-    
+  
+    const payload = {};
+
+    if (clubId !== "") payload.clubId = Number(clubId);
+    if (leagueId !== "") payload.leagueId = Number(leagueId);
+    if (year !== "") payload.year = Number(year);
     try {
-      let url = `${API_BASE_URL}/league-club-conciliations`;
-      const params = new URLSearchParams();
-      
-      if (clubId) params.append("clubId", clubId);
-      if (leagueId) params.append("leagueId", leagueId);
-      if (year) params.append("year", year);
-      
+      let url = `${API_BASE_URL}/league-club-conciliations/filter`;
+      const params = new URLSearchParams(payload);
+  
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
-      
+  
       const res = await fetch(url, { headers });
       if (!res.ok) throw new Error("Erro ao filtrar ligações");
-      
+  
       const connections = await res.json();
       renderConnections(connections);
     } catch (err) {
       showNotification("Erro ao filtrar ligações", "error");
     }
   }
+  
 
-
-
+   
   // Event listeners - Página de registro
   if (isLeagueRegisterPage) {
     if (leagueForm) {
